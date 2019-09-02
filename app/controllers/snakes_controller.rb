@@ -5,9 +5,9 @@ class SnakesController < ApplicationController
 
   # GET /snakes
   def index
-    @snakes = Snake.all
+    @snakes = Snake.includes(:scales).all
 
-    render json: @snakes
+    render json: @snakes.to_json(include: :scales)
   end
 
   # GET /snakes/1

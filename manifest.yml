@@ -1,0 +1,8 @@
+---
+applications:
+- name: toil-snake-api
+  buildpacks:
+  - ruby_buildpack
+  routes:
+  - route: toil-snake.apps.pcfone.io
+
