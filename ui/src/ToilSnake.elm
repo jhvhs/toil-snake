@@ -54,8 +54,8 @@ update msg model =
         ScaleDetails details ->
             ( setEditedScaleDetails model details, Cmd.none )
 
-        Tick _ ->
-            ( model, loadToilSnake model )
+        Tick time ->
+            ( { model | currentTime = Just time }, loadToilSnake model )
 
         CancelEdit ->
             ( { model | editedSnake = Nothing, editedScale = Nothing }, Cmd.none )

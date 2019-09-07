@@ -15,6 +15,8 @@ module Models exposing
     , setSnakeAuthor
     )
 
+import Time exposing (Posix)
+
 
 type alias Scale =
     { id : Int
@@ -44,6 +46,7 @@ type alias Model =
     { data : List ToilSnake
     , editedSnake : Maybe ToilSnake
     , editedScale : Maybe ToilSnakeScale
+    , currentTime : Maybe Posix
     }
 
 
@@ -65,6 +68,7 @@ initialModel : Model
 initialModel =
     Model
         []
+        Nothing
         Nothing
         Nothing
 

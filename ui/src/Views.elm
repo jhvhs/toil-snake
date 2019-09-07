@@ -3,11 +3,13 @@ module Views exposing (view)
 import Html exposing (Html, button, div, fieldset, form, h2, input, label, p, span, text, textarea)
 import Html.Attributes exposing (class, for, id, name, type_, value)
 import Html.Events exposing (onClick, onInput)
-import ISO8601
+import ISO8601 exposing (toPosix)
 import Markdown
 import Messages exposing (..)
 import Models exposing (..)
 import String
+import Time exposing (Posix)
+import ViewHelpers exposing (dateDiff)
 
 
 view : Model -> Html Message
@@ -27,7 +29,7 @@ mainView model =
                     scaleEditView scale
 
                 Nothing ->
-                    div [] (newSnakeView :: List.map snakeView model.data)
+                    div [] (newSnakeView :: List.map (snakeView model.currentTime) model.data)
 
 
 snakeEditView : ToilSnake -> Html Message
@@ -131,18 +133,18 @@ saveButton message =
         [ span [] [ text "Save" ] ]
 
 
-snakeView : ToilSnake -> Html Message
-snakeView snake =
+snakeView : Maybe Posix -> ToilSnake -> Html Message
+snakeView currentTime snake =
     div [ class "grid" ]
-        (snakeHeadView snake :: List.map (scaleReadView snake) snake.scales ++ [ newScaleView snake ])
+        (snakeHeadView snake currentTime :: List.map (scaleReadView snake currentTime) snake.scales ++ [ newScaleView snake ])
 
 
-snakeHeadView : ToilSnake -> Html Message
-snakeHeadView snake =
+snakeHeadView : ToilSnake -> Maybe Posix -> Html Message
+snakeHeadView snake currentTime =
     div [ class "col col-fixed ts-head" ]
         [ div [] [ text snake.title ]
         , div [] [ text snake.author ]
-        , div [] [ text (isoDateView snake.updated_at) ]
+        , div [] [ text (isoDateView snake.updated_at currentTime) ]
         , button [ onClick (EditSnake snake), class "pui-btn pui-btn--default" ] [ text "Edit" ]
         ]
 
@@ -168,15 +170,15 @@ newSnakeView =
         ]
 
 
-scaleReadView : ToilSnake -> Scale -> Html Message
-scaleReadView snake scale =
+scaleReadView : ToilSnake -> Maybe Posix -> Scale -> Html Message
+scaleReadView snake currentTime scale =
     div [ class "col col-fixed ts-scale" ]
         [ div
             [ class "aligner" ]
             [ div [ class "aligner-item type-ellipsis" ] (Markdown.toHtml Nothing scale.details)
             , div [ class "aligner-item aligner-item-bottom" ]
                 [ p [] [ text scale.author ]
-                , p [] [ text (isoDateView scale.updated_at) ]
+                , p [] [ text (isoDateView scale.updated_at currentTime) ]
                 , button
                     [ onClick (EditScale snake scale), class "pui-btn pui-btn--default aligner-item aligner-item-bottom" ]
                     [ text "Edit" ]
@@ -185,20 +187,20 @@ scaleReadView snake scale =
         ]
 
 
-isoDateView : String -> String
-isoDateView date =
+isoDateView : String -> Maybe Posix -> String
+isoDateView date currentTime =
     let
         d =
             ISO8601.fromString date
     in
     case d of
         Result.Ok t ->
-            String.fromInt t.year ++ "-" ++ twoDigits t.month ++ "-" ++ twoDigits t.day
+            case currentTime of
+                Just time ->
+                    dateDiff time (toPosix t)
+
+                Nothing ->
+                    ""
 
         Result.Err _ ->
             "Saving..."
-
-
-twoDigits : Int -> String
-twoDigits int =
-    String.padLeft 2 '0' (String.fromInt int)
