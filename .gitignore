@@ -12,6 +12,7 @@
 /tmp/*
 /ui/elm-stuff/**
 /public/application-*.js
+/public/index.html
 !/log/.keep
 !/tmp/.keep
 

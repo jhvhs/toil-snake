@@ -1,16 +1,51 @@
 .ts-head {
-    padding: 30px;
-    background-color: #eaedef;
-    width: 340px;
-    font-size: 15px;
+    /*background-color: #eaedef;*/
+    /*width: 340px;*/
+    /*font-size: 15px;*/
+    /*padding: 30px 40px 30px 30px;*/
+}
+
+.ts-scale, .ts-head {
+    width: 200px;
+    height: 170px;
+    background-image: url("/images/snake-scale.png");
+}
+
+.ts-head {
+    padding: 23px 40px 30px 30px;
+    margin-left: 1em;
 }
 
 .ts-scale {
-    padding: 30px;
-    background-color: #89969f;
-    width: 150px;
+    padding: 14px 40px 30px 30px;
+    margin-left: -40px;
 }
 
+.ts-ellipsis {
+    position: relative;
+    height: 4.4em;
+    overflow: hidden;
+    cursor: pointer; !important;
+}
+
+.ts-ellipsis::after {
+    content: "";
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60%;
+    height: 1.2em;
+    background: linear-gradient(to right, rgba(254, 255, 165, 0.35), rgba(254, 255, 165, 0.9) 50%);
+}
+
+.ts-scale .type-xs,.ts-head .type-xs {
+    margin-top: 1.2em;
+}
+
+.ts-filler {
+    height: 2.5em;
+}
 .ts-new-snake {
     padding: 10px;
     background-color: #b2f1e8;

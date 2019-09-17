@@ -50,14 +50,14 @@ deploy() {
   echo "Deploying [${deploy_filename}]"
 
   sed s/_APPLICATION_JS_/"$deploy_filename"/ build/index.build.html > ../public/index.html
-  cp "build/${deploy_filename}" ../public/
+  mv "build/${deploy_filename}" ../public/
 }
 
 cleanup() {
   local deploy_filename
   deploy_filename="$1"
 
-  for f in ../public/application-*.js; do
+  for f in ../public/application-*.js ./build/application-*.js; do
     if ! [[ "$f" =~ "$deploy_filename"$ ]]; then
       rm "$f"
     fi

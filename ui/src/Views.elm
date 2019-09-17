@@ -1,6 +1,6 @@
 module Views exposing (view)
 
-import Html exposing (Html, button, div, fieldset, form, h2, input, label, p, span, text, textarea)
+import Html exposing (Html, br, button, div, fieldset, form, h2, input, label, p, span, text, textarea)
 import Html.Attributes exposing (class, for, id, name, type_, value)
 import Html.Events exposing (onClick, onInput)
 import ISO8601 exposing (toPosix)
@@ -24,12 +24,22 @@ mainView model =
             snakeEditView snake
 
         Nothing ->
-            case model.editedScale of
-                Just scale ->
-                    scaleEditView scale
+            scaleEditOrMainSnakeView model
 
-                Nothing ->
-                    div [] (newSnakeView :: List.map (snakeView model.currentTime) model.data)
+
+scaleEditOrMainSnakeView : Model -> Html Message
+scaleEditOrMainSnakeView model =
+    case model.editedScale of
+        Just scale ->
+            scaleEditView scale
+
+        Nothing ->
+            mainSnakeView model
+
+
+mainSnakeView : Model -> Html Message
+mainSnakeView model =
+    div [] (newSnakeView :: List.map (snakeView model.currentTime) model.data)
 
 
 snakeEditView : ToilSnake -> Html Message
@@ -80,9 +90,7 @@ formInput fieldName component =
             [ div [ class "col" ] [ label [ for fieldName ] [ text fieldName ] ]
             , div [ class "col col-fixed col-middle post-label" ] []
             ]
-        , div [ class "field-row" ]
-            [ component
-            ]
+        , div [ class "field-row" ] [ component ]
         , div [ class "help-row type-gray" ] []
         ]
 
@@ -142,18 +150,23 @@ snakeView currentTime snake =
 snakeHeadView : ToilSnake -> Maybe Posix -> Html Message
 snakeHeadView snake currentTime =
     div [ class "col col-fixed ts-head" ]
-        [ div [] [ text snake.title ]
-        , div [] [ text snake.author ]
-        , div [] [ text (isoDateView snake.updated_at currentTime) ]
-        , button [ onClick (EditSnake snake), class "pui-btn pui-btn--default" ] [ text "Edit" ]
+        [ div [ onClick (EditSnake snake), class "ts-ellipsis" ] [ text snake.title ]
+        , p [ class "type-xs" ]
+            [ text snake.author
+            , br [] []
+            , text (isoDateView snake.updated_at currentTime)
+            ]
         ]
 
 
 newScaleView : ToilSnake -> Html Message
 newScaleView snake =
     if snake.id > 0 then
-        div [ class "col col-fixed ts-new-scale" ]
-            [ button [ onClick (NewScale snake), class "pui-btn pui-btn--brand" ] [ text "Add a scale" ] ]
+        div [ class "col col-fixed ts-scale" ]
+            [ p [ class "ts-filler" ] []
+            , p [ class "ts-ellipsis type-lg em-high", onClick (NewScale snake) ]
+                [ text "🐍 <Add a scale>" ]
+            ]
 
     else
         div [] []
@@ -175,13 +188,19 @@ scaleReadView snake currentTime scale =
     div [ class "col col-fixed ts-scale" ]
         [ div
             [ class "aligner" ]
-            [ div [ class "aligner-item type-ellipsis" ] (Markdown.toHtml Nothing scale.details)
+            [ div
+                [ class "aligner-item ts-ellipsis"
+                , onClick (EditScale snake scale)
+                ]
+                (Markdown.toHtml Nothing scale.details)
             , div [ class "aligner-item aligner-item-bottom" ]
-                [ p [] [ text scale.author ]
-                , p [] [ text (isoDateView scale.updated_at currentTime) ]
-                , button
-                    [ onClick (EditScale snake scale), class "pui-btn pui-btn--default aligner-item aligner-item-bottom" ]
-                    [ text "Edit" ]
+                [ p [ class "type-xs" ]
+                    [ text scale.author
+                    , br [] []
+                    , text (isoDateView scale.created_at currentTime)
+                    , text " * "
+                    , text (isoDateView scale.updated_at currentTime)
+                    ]
                 ]
             ]
         ]
