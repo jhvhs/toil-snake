@@ -73,11 +73,7 @@ update msg model =
                 Ok _ ->
                     ( model, Cmd.none )
 
-                Err err ->
-                    let
-                        _ =
-                            Debug.log "" err
-                    in
+                Err _ ->
                     ( model, Cmd.none )
 
 
