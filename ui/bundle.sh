@@ -40,6 +40,7 @@ build() {
   local app_filename
   app_filename="$1"
 
+  elm-test
   elm make src/*.elm --optimize --output="build/${app_filename}"
 }
 
