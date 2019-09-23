@@ -1,6 +1,7 @@
 module ViewHelperTests exposing (all)
 
-import Expect
+import ElmTestBDDStyle exposing (..)
+import Expect exposing (..)
 import Test exposing (..)
 import Time exposing (millisToPosix)
 import ViewHelpers exposing (dateDiff)
@@ -9,38 +10,22 @@ import ViewHelpers exposing (dateDiff)
 all : Test
 all =
     describe "date diff display helper"
-        [ test "very close" <|
-            \_ ->
-                makeDiff 1
-                    |> Expect.equal "just now"
-        , test "over a minute" <|
-            \_ ->
-                makeDiff 75
-                    |> Expect.equal "1m ago"
-        , test "over an hour" <|
-            \_ ->
-                makeDiff 11000
-                    |> Expect.equal "3h ago"
-        , test "over a day" <|
-            \_ ->
-                makeDiff 90000
-                    |> Expect.equal "1d ago"
-        , test "over a week" <|
-            \_ ->
-                makeDiff 700000
-                    |> Expect.equal "1w ago"
-        , test "over a month" <|
-            \_ ->
-                makeDiff 4000000
-                    |> Expect.equal "1mth ago"
-        , test "over a year" <|
-            \_ ->
-                makeDiff 50000000
-                    |> Expect.equal "1y ago"
-        , test "wrong order" <|
-            \_ ->
-                dateDiff (millisToPosix 0) (millisToPosix 653687)
-                    |> Expect.equal "not happened yet"
+        [ it "is very close" <|
+            expect (makeDiff 1) to equal "just now"
+        , it "is over a minute" <|
+            expect (makeDiff 75) to equal "1m ago"
+        , it "is over an hour" <|
+            expect (makeDiff 11000) to equal "3h ago"
+        , it "is over a day" <|
+            expect (makeDiff 90000) to equal "1d ago"
+        , it "is over a week" <|
+            expect (makeDiff 700000) to equal "1w ago"
+        , it "is over a month" <|
+            expect (makeDiff 4000000) to equal "1mth ago"
+        , it "is over a year" <|
+            expect (makeDiff 50000000) to equal "1y ago"
+        , it "is a wrong order" <|
+            expect (dateDiff (millisToPosix 0) (millisToPosix 653687)) to equal "not happened yet"
         ]
 
 
