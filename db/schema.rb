@@ -12,7 +12,10 @@
 
 ActiveRecord::Schema.define(version: 2019_08_17_203829) do
 
-  create_table "scales", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "scales", force: :cascade do |t|
     t.bigint "snake_id", null: false
     t.string "author"
     t.text "details"
@@ -21,7 +24,7 @@ ActiveRecord::Schema.define(version: 2019_08_17_203829) do
     t.index ["snake_id"], name: "index_scales_on_snake_id"
   end
 
-  create_table "snakes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "snakes", force: :cascade do |t|
     t.string "title"
     t.string "author"
     t.datetime "created_at", precision: 6, null: false
