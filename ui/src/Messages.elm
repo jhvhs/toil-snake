@@ -10,6 +10,7 @@ type Message
     | NewSnake
     | SnakeTitle String
     | SnakeAuthor String
+    | SnakeArchived Bool
     | EditSnake ToilSnake
     | SaveSnake
     | ScaleDetails String

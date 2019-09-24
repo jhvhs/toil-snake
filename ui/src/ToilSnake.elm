@@ -36,6 +36,9 @@ update msg model =
         SnakeAuthor author ->
             ( setEditedSnakeAuthor model author, Cmd.none )
 
+        SnakeArchived archived ->
+            ( setEditedSnakeArchived model archived, Cmd.none )
+
         SaveSnake ->
             onSaveSnakeChanges model
 

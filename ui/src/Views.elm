@@ -1,8 +1,8 @@
 module Views exposing (view)
 
 import Html exposing (Html, br, button, div, fieldset, form, h2, input, label, p, span, text, textarea)
-import Html.Attributes exposing (class, for, id, name, type_, value)
-import Html.Events exposing (onClick, onInput)
+import Html.Attributes exposing (checked, class, for, id, name, type_, value)
+import Html.Events exposing (onCheck, onClick, onInput)
 import ISO8601 exposing (toPosix)
 import Markdown
 import Messages exposing (..)
@@ -49,6 +49,7 @@ snakeEditView snake =
             [ fieldset []
                 [ inputComponent "Title" snake.title SnakeTitle
                 , inputComponent "Author" snake.author SnakeAuthor
+                , toggleSwitch "Archived" snake.archived SnakeArchived
                 , div [ class "grid" ]
                     [ div [ class "col" ] []
                     , div [ class "col col-fixed" ]
@@ -93,6 +94,28 @@ formInput fieldName component =
         , div [ class "field-row" ] [ component ]
         , div [ class "help-row type-gray" ] []
         ]
+
+
+toggleSwitch : String -> Bool -> (Bool -> Message) -> Html Message
+toggleSwitch fieldName fieldValue message =
+    let
+        fieldId =
+            fieldName ++ "-toggle"
+    in
+    formInput fieldName
+        (div [ class "pui-toggle" ]
+            [ input
+                [ type_ "checkbox"
+                , name fieldId
+                , id fieldId
+                , checked fieldValue
+                , class "pui-toggle-switch"
+                , onCheck message
+                ]
+                []
+            , label [ for fieldId, class "medium" ] []
+            ]
+        )
 
 
 inputComponent : String -> String -> (String -> Message) -> Html Message

@@ -1,6 +1,6 @@
 module Decoders exposing (modelDecoder, scaleDecoder, snakeDecoder)
 
-import Json.Decode exposing (Decoder, field, int, list, map6, string)
+import Json.Decode exposing (Decoder, bool, field, int, list, map6, map7, string)
 import Models exposing (Scale, ToilSnake)
 
 
@@ -11,12 +11,13 @@ modelDecoder =
 
 snakeDecoder : Decoder ToilSnake
 snakeDecoder =
-    map6 ToilSnake
+    map7 ToilSnake
         (field "id" int)
         (field "title" string)
         (field "author" string)
         (field "created_at" string)
         (field "updated_at" string)
+        (field "archived" bool)
         (field "scales" (list scaleDecoder))
 
 

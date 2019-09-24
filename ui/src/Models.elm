@@ -10,6 +10,7 @@ module Models exposing
     , saveSnakeScale
     , setEditedScaleAuthor
     , setEditedScaleDetails
+    , setEditedSnakeArchived
     , setEditedSnakeAuthor
     , setEditedSnakeTitle
     , setSnakeAuthor
@@ -34,6 +35,7 @@ type alias ToilSnake =
     , author : String
     , created_at : String
     , updated_at : String
+    , archived : Bool
     , scales : List Scale
     }
 
@@ -56,7 +58,7 @@ type alias Model =
 
 newSnake : ToilSnake
 newSnake =
-    ToilSnake 0 "" "" "" "" []
+    ToilSnake 0 "" "" "" "" False []
 
 
 newScale : Scale
@@ -120,6 +122,11 @@ addScaleToSnake theSnake aSnake =
         aSnake
 
 
+setSnakeArchived : ToilSnake -> Bool -> ToilSnake
+setSnakeArchived snake archived_ =
+    { snake | archived = archived_ }
+
+
 setSnakeAuthor : ToilSnake -> String -> ToilSnake
 setSnakeAuthor snake newAuthor =
     { snake | author = newAuthor }
@@ -142,6 +149,20 @@ setEditedSnakeTitle model title =
 setSnakeTitle : ToilSnake -> String -> ToilSnake
 setSnakeTitle snake newTitle =
     { snake | title = newTitle }
+
+
+setEditedSnakeArchived : Model -> Bool -> Model
+setEditedSnakeArchived model archived =
+    case model.editedSnake of
+        Just snake ->
+            let
+                updatedSnake =
+                    setSnakeArchived snake archived
+            in
+            { model | editedSnake = Just updatedSnake, data = List.map (saveSnake updatedSnake) model.data }
+
+        Nothing ->
+            model
 
 
 setEditedSnakeAuthor : Model -> String -> Model

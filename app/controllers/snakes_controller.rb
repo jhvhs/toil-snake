@@ -49,6 +49,6 @@ class SnakesController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def snake_params
-    params.require(:snake).permit(:title, :author)
+    params.require(:snake).permit(:title, :author, :archived)
   end
 end

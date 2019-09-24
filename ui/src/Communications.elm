@@ -30,7 +30,18 @@ snakeRepresentation snake =
     String.join "&"
         [ "snake[title]=" ++ Url.percentEncode snake.title
         , "snake[author]=" ++ Url.percentEncode snake.author
+        , "snake[archived]=" ++ boolString snake.archived
         ]
+
+
+boolString : Bool -> String
+boolString bool =
+    case bool of
+        True ->
+            "yes"
+
+        False ->
+            "no"
 
 
 fullSaveSnakeScaleUrl : ToilSnakeScale -> String
